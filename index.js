@@ -32,6 +32,11 @@ async function run() {
         const selectedClassesCollection = client.db("proDrawing").collection("selectedclasses");
 
         // user collection apis
+        app.get('/users', async (req, res) => {
+            const result = await usersCollection.find().toArray();
+            res.send(result)
+        })
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const query = { email: user.email };
