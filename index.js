@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
+const jwt = require('jsonwebtoken');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -30,6 +31,14 @@ async function run() {
         const usersCollection = client.db("proDrawing").collection("users");
         const classesCollection = client.db("proDrawing").collection("classes");
         const selectedClassesCollection = client.db("proDrawing").collection("selectedclasses");
+
+        // jwt token
+        // console.log(process.env.ACCESS_TOKEN_SECRET)
+        app.post('/jwt', (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+            res.send({ token })
+        })
 
         // user collection apis
         app.get('/users', async (req, res) => {
