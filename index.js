@@ -27,8 +27,16 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
+        const usersCollection = client.db("proDrawing").collection("users");
         const classesCollection = client.db("proDrawing").collection("classes");
         const selectedClassesCollection = client.db("proDrawing").collection("selectedclasses");
+
+        // user collection apis
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        })
 
         // classes collection apis
         app.get('/classes', async (req, res) => {
@@ -49,7 +57,6 @@ async function run() {
 
         app.post('/selectedclasses', async (req, res) => {
             const selectedClasses = req.body;
-            console.log(selectedClasses)
             const result = await selectedClassesCollection.insertOne(selectedClasses)
             res.send(result)
         })
