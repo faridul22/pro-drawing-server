@@ -37,8 +37,15 @@ async function run() {
         })
 
         // selected classes apis
-
-        app.get('')
+        app.get('/selectedclasses', async (req, res) => {
+            const email = req.query.email;
+            if (!email) {
+                res.send([])
+            }
+            const query = { email: email };
+            const result = await selectedClassesCollection.find(query).toArray();
+            res.send(result)
+        })
 
         app.post('/selectedclasses', async (req, res) => {
             const selectedClasses = req.body;
