@@ -27,7 +27,25 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
-        const classesCollection = client.db("proDrawing").collection("classes")
+        const classesCollection = client.db("proDrawing").collection("classes");
+        const selectedClassesCollection = client.db("proDrawing").collection("selectedclasses");
+
+        // classes collection apis
+        app.get('/classes', async (req, res) => {
+            const result = await classesCollection.find().toArray();
+            res.send(result)
+        })
+
+        // selected classes apis
+
+        app.get('')
+
+        app.post('/selectedclasses', async (req, res) => {
+            const selectedClasses = req.body;
+            console.log(selectedClasses)
+            const result = await selectedClassesCollection.insertOne(selectedClasses)
+            res.send(result)
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
