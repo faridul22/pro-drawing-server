@@ -198,7 +198,7 @@ async function run() {
         // update class information
         app.patch('/classes/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id)
+
             const filter = { _id: new ObjectId(id) }
             const options = { upsert: true }
             const updatedClass = req.body;
@@ -218,7 +218,7 @@ async function run() {
         // class status change api
         app.patch('/classes/approved/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id)
+
             const query = { _id: new ObjectId(id) }
             const updateDoc = {
                 $set: {
@@ -231,7 +231,7 @@ async function run() {
 
         app.patch('/classes/denied/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id)
+
             const query = { _id: new ObjectId(id) }
             const updateDoc = {
                 $set: {
@@ -243,7 +243,7 @@ async function run() {
         })
         app.patch('/classes/feedback/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id)
+
             const filter = { _id: new ObjectId(id) }
             const options = { upsert: true }
             const updatedClass = req.body;
