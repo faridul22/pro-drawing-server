@@ -167,6 +167,34 @@ async function run() {
             res.send(result);
         })
 
+
+        app.patch('/classes/approved/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    status: 'approved'
+                }
+            }
+            const result = await classesCollection.updateOne(query, updateDoc);
+            res.send(result);
+        })
+
+        app.patch('/classes/denied/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = {
+                $set: {
+                    status: 'denied'
+                }
+            }
+            const result = await classesCollection.updateOne(query, updateDoc);
+            res.send(result);
+        })
+
+
         // selected classes apis
         app.get('/selectedclasses', verifyJWT, async (req, res) => {
             const email = req.query.email;
