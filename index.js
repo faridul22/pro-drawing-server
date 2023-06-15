@@ -92,6 +92,15 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/instructors', async (req, res) => {
+            const query = { role: "instructor" }
+            const options = {
+                sort: { "totalStudent": -1 }
+            }
+            const result = await usersCollection.find(query, options).toArray();
+            res.send(result)
+        })
+
         app.post('/users', async (req, res) => {
             const user = req.body;
             const query = { email: user.email };
