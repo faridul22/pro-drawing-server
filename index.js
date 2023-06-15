@@ -314,6 +314,25 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/paymentData', verifyJWT, async (req, res) => {
+            const email = req.query.email;
+
+            if (!email) {
+                res.send([])
+            }
+
+            // check email
+            const decodedEmail = req.decoded.email;
+            if (email !== decodedEmail) {
+                res.status(403).send({ error: true, message: 'forbidden access' });
+            }
+
+
+            const query = { email: email };
+            const result = await paymentsCollection.find(query).toArray();
+            res.send(result)
+        })
+
 
 
         // ---------------------------Payment--------------------------
