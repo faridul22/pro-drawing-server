@@ -82,7 +82,6 @@ async function run() {
             }
             next();
         }
-        // ------------------------End-----------------------------
 
 
 
@@ -103,7 +102,6 @@ async function run() {
             const result = await usersCollection.insertOne(user);
             res.send(result);
         })
-        //------------------------End---------------------------
 
 
 
@@ -136,7 +134,6 @@ async function run() {
             const result = { instructor: user?.role === 'instructor' }
             res.send(result);
         })
-        //----------------------End----------------------------------
 
 
 
@@ -165,7 +162,6 @@ async function run() {
             const result = await usersCollection.updateOne(query, updateDoc);
             res.send(result);
         })
-        //------------------------End----------------------------
 
 
 
@@ -175,11 +171,10 @@ async function run() {
             const result = await classesCollection.find().toArray();
             res.send(result)
         })
-        //---------------------End-------------------------
 
 
 
-        //---------------------Instructor api-----------------------
+        //---------------------Instructor api------------------
 
         app.get('/myclasses', verifyJWT, verifyInstructor, async (req, res) => {
             const email = req.query.email;
@@ -231,7 +226,6 @@ async function run() {
             const result = await classesCollection.updateOne(filter, updateInfo, options);
             res.send(result);
         })
-        //--------------------------End------------------------
 
 
 
@@ -276,7 +270,6 @@ async function run() {
             const result = await classesCollection.updateOne(filter, updateInfo, options);
             res.send(result);
         })
-        //--------------------End-------------------------
 
 
 
@@ -320,7 +313,6 @@ async function run() {
             const result = await selectedClassesCollection.deleteOne(query);
             res.send(result)
         })
-        //----------------------------End----------------------------
 
 
 
@@ -340,15 +332,37 @@ async function run() {
             })
         })
 
+
         // payment related apis
         app.post('/payments', verifyJWT, async (req, res) => {
             const payment = req.body;
             const insertResult = await paymentsCollection.insertOne(payment);
 
+            // delete from selected class
             const query = { _id: new ObjectId(payment.selectedClassId) }
             const deleteResult = await selectedClassesCollection.deleteOne(query);
 
-            res.send({ insertResult, deleteResult })
+            // update class information
+            const filter = { _id: new ObjectId(payment.classId) }
+            const availableSeats = payment.availableSeats;
+            const totalStudent = payment.totalStudent;
+            const options = { upsert: true };
+
+            const updateDoc = {
+                $set: {
+                    availableSeats: availableSeats - 1,
+                    totalStudent: totalStudent + 1,
+                }
+            }
+            const updateResult = await classesCollection.updateOne(filter, updateDoc, options);
+
+            const responseObj = {
+                insertResult,
+                deleteResult,
+                updateResult
+            };
+
+            res.send(responseObj)
         })
         //----------------------End------------------------------
 
