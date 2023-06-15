@@ -168,7 +168,11 @@ async function run() {
         // -----------------------Public api---------------------
 
         app.get('/classes', async (req, res) => {
-            const result = await classesCollection.find().toArray();
+            const query = {}
+            const options = {
+                sort: { "totalStudent": -1 }
+            }
+            const result = await classesCollection.find(query, options).toArray();
             res.send(result)
         })
 
@@ -329,7 +333,10 @@ async function run() {
 
 
             const query = { email: email };
-            const result = await paymentsCollection.find(query).toArray();
+            const options = {
+                sort: { "date": -1 }
+            }
+            const result = await paymentsCollection.find(query, options).toArray();
             res.send(result)
         })
 
