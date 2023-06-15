@@ -176,6 +176,15 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/approvedclasses', async (req, res) => {
+            const query = { status: "approved" }
+            const options = {
+                sort: { "totalStudent": -1 }
+            }
+            const result = await classesCollection.find(query, options).toArray();
+            res.send(result)
+        })
+
 
 
         //---------------------Instructor api------------------
