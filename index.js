@@ -58,6 +58,7 @@ async function run() {
             res.send({ token })
         })
 
+
         //----------------------Custom middleware-------------------
 
         // admin verify
@@ -138,6 +139,7 @@ async function run() {
         //----------------------End----------------------------------
 
 
+
         //---------------------Manage user role----------------------
 
         app.patch('/users/admin/:id', async (req, res) => {
@@ -166,6 +168,7 @@ async function run() {
         //------------------------End----------------------------
 
 
+
         // -----------------------Public api---------------------
 
         app.get('/classes', async (req, res) => {
@@ -173,6 +176,8 @@ async function run() {
             res.send(result)
         })
         //---------------------End-------------------------
+
+
 
         //---------------------Instructor api-----------------------
 
@@ -274,6 +279,7 @@ async function run() {
         //--------------------End-------------------------
 
 
+
         //----------------Student api---------------------
 
         app.get('/selectedclasses', verifyJWT, async (req, res) => {
@@ -345,6 +351,7 @@ async function run() {
             res.send({ insertResult, deleteResult })
         })
         //----------------------End------------------------------
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
