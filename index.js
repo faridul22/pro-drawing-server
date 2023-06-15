@@ -58,7 +58,8 @@ async function run() {
             res.send({ token })
         })
 
-        //-------------------------------------------
+        //----------------------Custom middleware-------------------
+
         // admin verify
         const verifyAdmin = async (req, res, next) => {
             const email = req.decoded.email;
@@ -80,9 +81,12 @@ async function run() {
             }
             next();
         }
-        //---------------------------------------
+        // ------------------------End-----------------------------
 
-        // user collection apis
+
+
+        //---------------------User collection apis------------------
+
         app.get('/users', verifyJWT, async (req, res) => {
             const result = await usersCollection.find().toArray();
             res.send(result)
@@ -98,10 +102,13 @@ async function run() {
             const result = await usersCollection.insertOne(user);
             res.send(result);
         })
+        //------------------------End---------------------------
 
-        //---------------------------------------
 
-        // checkAdminRole
+
+        //----------------------Admin api----------------------
+
+        // checkAdminRole 
         app.get('/users/admin/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
 
@@ -114,7 +121,6 @@ async function run() {
             const result = { admin: user?.role === 'admin' }
             res.send(result);
         })
-        //--------------------------
 
         // checkInstructorRole
         app.get('/users/instructor/:email', verifyJWT, async (req, res) => {
@@ -129,10 +135,11 @@ async function run() {
             const result = { instructor: user?.role === 'instructor' }
             res.send(result);
         })
+        //----------------------End----------------------------------
 
-        //----------------------------------------------
 
-        // manage user role
+        //---------------------Manage user role----------------------
+
         app.patch('/users/admin/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
@@ -156,14 +163,19 @@ async function run() {
             const result = await usersCollection.updateOne(query, updateDoc);
             res.send(result);
         })
+        //------------------------End----------------------------
 
-        // classes collection apis
+
+        // -----------------------Public api---------------------
+
         app.get('/classes', async (req, res) => {
             const result = await classesCollection.find().toArray();
             res.send(result)
         })
+        //---------------------End-------------------------
 
-        //---------------------
+        //---------------------Instructor api-----------------------
+
         app.get('/myclasses', verifyJWT, verifyInstructor, async (req, res) => {
             const email = req.query.email;
 
@@ -182,7 +194,6 @@ async function run() {
             const result = await classesCollection.find(query).toArray();
             res.send(result)
         })
-        //---------------------
 
         app.get('/classes/:id', async (req, res) => {
             const id = req.params.id;
@@ -215,9 +226,12 @@ async function run() {
             const result = await classesCollection.updateOne(filter, updateInfo, options);
             res.send(result);
         })
+        //--------------------------End------------------------
 
 
-        // class status change api
+
+        // ---------------------Admin api----------------------
+
         app.patch('/classes/approved/:id', async (req, res) => {
             const id = req.params.id;
 
@@ -257,9 +271,11 @@ async function run() {
             const result = await classesCollection.updateOne(filter, updateInfo, options);
             res.send(result);
         })
-        //----------------------
+        //--------------------End-------------------------
 
-        // selected classes apis
+
+        //----------------Student api---------------------
+
         app.get('/selectedclasses', verifyJWT, async (req, res) => {
             const email = req.query.email;
 
@@ -298,6 +314,9 @@ async function run() {
             const result = await selectedClassesCollection.deleteOne(query);
             res.send(result)
         })
+        //----------------------------End----------------------------
+
+
 
         // ---------------------------Payment--------------------------
 
@@ -325,7 +344,7 @@ async function run() {
 
             res.send({ insertResult, deleteResult })
         })
-        //----------------------------------------------------------
+        //----------------------End------------------------------
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
